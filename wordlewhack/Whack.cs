@@ -107,36 +107,36 @@ namespace wordlewhack
 
         public int[] FindFive(int startIndex = 0)
         {
-            Parallel.ForEach(WordIntArray, x => subSearch(new int[] { x }));
+            Parallel.ForEach(WordIntArray, x => getMatches(new int[] { x }, WordIntArray));
             return FinalWords;
         }
 
-        private int[] subSearch(int[] currentList)
+        private int[] getMatches(int[] currentList, int[] potentialList)
         {
-            foreach (var i in WordIntArray.Where(x=> !DuffList.Contains(x)))
+            potentialList = potentialList.Where(x => currentList.Count(y => (x & y) > 0) == 0).ToArray();
+
+            if (currentList.Count() + potentialList.Count() < 5)
             {
+                return currentList.ToArray();
+            }
+
+            foreach (var i in potentialList)
+            {
+                if (currentList.Length == 4)
+                {
+                    FinalWords = currentList.Concat(new int[] { i }).ToArray();
+                    Found = true;
+                    return FinalWords;
+                }
+
+                //getMatches(currentList.Concat(new int[] { i }).ToArray(), potentialList);
+                getMatches(currentList.Append(i).ToArray() , potentialList);
                 if (Found)
                 {
                     return FinalWords;
                 }
-                if (currentList.Count(x => (x&i) > 0) == 0)
-                {
-                    //if we have 5, finish
-                    if (currentList.Count() == 4)
-                    {
-                        Debug.Print("Arr = {0} i = {1}", string.Join(",", currentList), i);
-                        FinalWords = currentList.Concat(new int[] { i }).ToArray();
-                        Found = true;
-                        return FinalWords;
-                    }
-                    //go search further on this vein
-                    //Debug.Print("Arr = {0} i = {1}", string.Join(",", currentList), i);
-                    subSearch(currentList.Concat(new int[] { i }).ToArray());
-
-                }
             }
-            //if we get this far then write something out to say that none of these have a combo
-            //DuffList.Add(currentList.Last());
+
             return currentList.ToArray();
         }
 
