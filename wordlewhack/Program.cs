@@ -24,5 +24,4 @@ foreach (int i in five)
     Console.WriteLine(w.ConvertIntToWord(i));
 }
 
-Console.WriteLine("FIN");
 Console.ReadLine();
