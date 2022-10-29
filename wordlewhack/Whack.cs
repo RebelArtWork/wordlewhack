@@ -74,7 +74,7 @@ namespace wordlewhack
                     Found = true;
                     return FinalWords;
                 }
-
+                
                 getMatches(currentList.Append(i).ToArray() , potentialList);
                 if (Found)
                 {
